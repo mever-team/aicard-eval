@@ -7,7 +7,9 @@ This is a package created under the AI-CODE and it's part of the transparency se
 
 ## ⚡ Quickstart
 
-Follow the script bellow. The aicard-eval will choose the correct metrics corresponding to your case. For more examples see the examples/ folder.
+Follow the script bellow. The aicard-eval will choose the correct metrics corresponding to your case. For more examples see the examples/ folder. 
+
+You can use datasets and models from service providers e.g. huggingface or you can use your local models and datasets. Supported datasets types are: .csv, .tsv, .json, .jsonl, .xml, .yml, .yaml, .parquet, .feather, .pickle and supported image types are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif
 
 ```python
 import aicard_eval
