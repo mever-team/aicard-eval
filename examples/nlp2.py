@@ -1,7 +1,7 @@
 from datasets import load_dataset
 from huggingface_hub import dataset_info
 from transformers import pipeline
-import evaluation
+import aicard_eval
 
 class TextClassifier:
     def __init__(self):
@@ -18,10 +18,10 @@ class TextClassifier:
             out.append([flat[name] for name in self.class_names.values()])
         return out
 
-metrics = evaluation.evaluate(
+metrics = aicard_eval.evaluate(
     data=load_dataset("google-research-datasets/go_emotions", split='test'),
     pipeline=TextClassifier(),
-    task=evaluation.tasks.nlp.text_classification,
+    task=aicard_eval.tasks.nlp.text_classification,
     batch_size=32)
 
 print(metrics)

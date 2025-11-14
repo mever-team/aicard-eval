@@ -1,9 +1,11 @@
-from evaluation import __version__
 from setuptools import setup, find_packages
 
+with open("requirements.txt") as f:
+    requirements = f.read().splitlines()
+    
 setup(
     name="aicar-eval",
-    version=__version__,
+    version='0.1.0',
     packages=find_packages(),
-    install_requires=[],
+    install_requires=requirements,
 )

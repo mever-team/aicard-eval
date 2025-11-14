@@ -1,4 +1,4 @@
-import evaluation
+import aicard_eval
 from transformers import AutoImageProcessor, SiglipForImageClassification
 import torch
 from datasets import load_dataset
@@ -24,10 +24,10 @@ def pipeline(data):
     return [probs]
 
 
-metrics = evaluation.evaluate(
+metrics = aicard_eval.evaluate(
     data=dataset.select(range(100)),
     pipeline=pipeline,
-    task=evaluation.tasks.vision.image_classification,
+    task=aicard_eval.tasks.vision.image_classification,
     batch_size=1)
 
 print(metrics)

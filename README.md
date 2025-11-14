@@ -7,46 +7,67 @@ This is a package created under the AI-CODE and it's part of the transparency se
 
 ## ⚡ Quickstart
 
+To install use:
+
+```
+conda create -n aicard-eval python=3.11
+conta activate aicard-eval
+pip install -e .
+```
 Follow the script bellow. The aicard-eval will choose the correct metrics corresponding to your case. For more examples see the examples/ folder. 
 
 You can use datasets and models from service providers e.g. huggingface or you can use your local models and datasets. Supported datasets types are: .csv, .tsv, .json, .jsonl, .xml, .yml, .yaml, .parquet, .feather, .pickle and supported image types are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif
 
 ```python
 import aicard_eval
-from transformers import pipeline, AutoTokenizer
 from datasets import load_dataset
+from huggingface_hub import dataset_info
+from transformers import pipeline
 
 # 1) Load your model
-classifier = pipeline(
-    "text-classification",
-    model='vectara/hallucination_evaluation_model',
-    tokenizer=AutoTokenizer.from_pretrained('google/flan-t5-base'),
-    trust_remote_code=True,
-    device = 0
-)
+classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
 
 # 2) Load your dataset
-dataset = load_dataset("lytang/LLM-AggreFact")
-data_test = dataset['test']
+dataset = load_dataset("google-research-datasets/go_emotions", split='test')
+class_names = dataset.features["labels"].feature.names
+
 
 # 3) Define a function to handle the dataset
 def pipeline(data):
-    claim = [sample[:256] for sample in data['claim']]
-    doc = [sample[:256] for sample in data['doc']]
-    pairs = [(c, d) for c, d in zip(claim, doc)]
-    prompt = "<pad> Determine if the hypothesis is true given the premise?\n\nPremise: {text1}\n\nHypothesis: {text2}"
-    input_pairs = [prompt.format(text1=pair[0], text2=pair[1]) for pair in pairs]
-    full_scores = classifier(input_pairs, top_k=None)
-    simple_scores = [score_dict['score'] for score_for_both_labels in full_scores for score_dict in score_for_both_labels if score_dict['label'] == 'consistent']
-    return simple_scores
+        sentences = [text for text in data['text']]
+        model_outputs = classifier(sentences)
+        out = []
+        for sample in model_outputs:
+            flat = {d['label']: d['score'] for d in sample}
+            out.append([flat[name] for name in class_names])
+        return out
 
 # 4) call the aicard-eval evaluation function
 metrics = aicard_eval.evaluate(
-    data=data_test.select(range(200)),
+    data=dataset,
     pipeline=pipeline,
-    task=aicard_eval.tasks.nlp.text_classification,
-    batch_size=4)
+    task=aicard_eval.tasks.vision.image_classification,
+    batch_size=32)
 
 print(metrics)
+# {'package version': '0.1.0', 
+# 'datetime': '2025-Nov-14 14:54', 
+# 'task': 'Text Classification', 
+# 'metrics': {
+#     'precision_macro': 0.5090416420534856, 
+#     'precision_micro': 0.5741662060070021, 
+#     'recall_macro': 0.46497245851260965, 
+#     'recall_micro': 0.5741662060070021, 
+#     'top1_acc_micro': 0.5741662060070021, 
+#     'top1_acc_macro': 0.5741662060070021, 
+#     'top1_acc_weighted': 0.5741662060070021, 
+#     'f1_macro': 0.4661938061623436, 
+#     'f1_micro': 0.5741662060070021, 
+#     'auc_roc_macro': 0.9286682043487104, 
+#     'auc_roc_weighted': 0.9099991445506153}, 
+# 'batch_size': 32, 
+# 'hardware': 'CPU: AMD Ryzen 7 7800X3D 8-Core Processor, RAM: 15.62 GB, CUDA: | NVIDIA-SMI 580.102.01 Driver Version: 581.57  CUDA Version: 13.0|', 
+# 'execution_time': 'inference: 34.68s, metrics: 45.76ms', 
+# 'num_classes': 28}
 ```
 

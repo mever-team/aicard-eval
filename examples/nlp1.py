@@ -1,4 +1,4 @@
-import evaluation
+import aicard_eval
 from transformers import pipeline, AutoTokenizer
 from datasets import load_dataset
 
@@ -23,10 +23,10 @@ def pipeline(data):
     return simple_scores
 
 
-metrics = evaluation.evaluate(
+metrics = aicard_eval.evaluate(
     data=data_test.select(range(200)),
     pipeline=pipeline,
-    task=evaluation.tasks.nlp.text_classification,
+    task=aicard_eval.tasks.nlp.text_classification,
     batch_size=4)
 
 print(metrics)

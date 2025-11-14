@@ -2,8 +2,8 @@ from datetime import datetime
 import time
 import inspect
 
-import evaluation
-from evaluation.utils import (human_readable_time,
+import aicard_eval
+from .utils import (human_readable_time,
                               get_hardware_info,
                               is_path,
                               read_data,
@@ -23,7 +23,7 @@ def autocall(metric, **kwargs):
 def evaluate(
     data: "path or data",
     pipeline: callable,
-    task: evaluation.tasks.Task,
+    task: aicard_eval.tasks.Task,
     target_column:str|None=None,
     num_classes:int|None=None,  # in case the preds have more classes than target
     batch_size:int=1,
@@ -55,7 +55,7 @@ def evaluate(
         anns=anns
     )
 
-    if 'num_classes' in kwargs and kwargs['num_classes'] == 2: task.metrics.append(evaluation.metrics.precision_recall_curves)
+    if 'num_classes' in kwargs and kwargs['num_classes'] == 2: task.metrics.append(aicard_eval.metrics.precision_recall_curves)
     start = time.time()
     metrics = {metric.__name__: autocall(metric, **kwargs) for metric in task.metrics}
     metrics_execution_time = time.time() - start
@@ -66,7 +66,7 @@ def evaluate(
         caller_content = f.read()
 
     out = {
-        'package version': evaluation.__version__,
+        'package version': aicard_eval.__version__,
         'datetime': datetime.now().strftime('%Y-%b-%d %H:%M'),
         'task':task.name ,
         'metrics': metrics,
