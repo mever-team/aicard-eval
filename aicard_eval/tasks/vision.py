@@ -1,8 +1,8 @@
 import numpy as np
 from typing import Tuple
-from evaluation.tasks import params
-from evaluation import metrics
-from evaluation.tasks import Task
+from . import params
+from .. import metrics
+from . import Task
 
 depth_estimation = Task(
     "Depth Estimation",

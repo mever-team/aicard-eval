@@ -6,7 +6,7 @@ import requests
 
 import validators
 
-from evaluation import utils
+from ... import utils
 
 def main(data, preds, target_column, num_classes, anns):
     anns_source = data if len(anns.features) == 0 else anns

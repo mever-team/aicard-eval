@@ -1,7 +1,20 @@
-import evaluation
+# AICard-Eval
+
+This is a package created under the AI-CODE and it's part of the transparency services for AI model cards. Its purpose is to provide a single tool for evaluating AI models. The output is standardized and ment (but not restricted) to be used as an import for aicard package.
+
+*Notice:*
+*This is an alpha version. Suported cases are text and image binary, multiclass, and multilabel classifications*
+
+## ⚡ Quickstart
+
+Follow the script bellow. The aicard-eval will choose the correct metrics corresponding to your case. For more examples see the examples/ folder.
+
+```python
+import aicard_eval
 from transformers import pipeline, AutoTokenizer
 from datasets import load_dataset
 
+# 1) Load your model
 classifier = pipeline(
     "text-classification",
     model='vectara/hallucination_evaluation_model',
@@ -9,9 +22,12 @@ classifier = pipeline(
     trust_remote_code=True,
     device = 0
 )
+
+# 2) Load your dataset
 dataset = load_dataset("lytang/LLM-AggreFact")
 data_test = dataset['test']
 
+# 3) Define a function to handle the dataset
 def pipeline(data):
     claim = [sample[:256] for sample in data['claim']]
     doc = [sample[:256] for sample in data['doc']]
@@ -22,11 +38,13 @@ def pipeline(data):
     simple_scores = [score_dict['score'] for score_for_both_labels in full_scores for score_dict in score_for_both_labels if score_dict['label'] == 'consistent']
     return simple_scores
 
-
-metrics = evaluation.evaluate(
+# 4) call the aicard-eval evaluation function
+metrics = aicard_eval.evaluate(
     data=data_test.select(range(200)),
     pipeline=pipeline,
-    task=evaluation.tasks.nlp.text_classification,
+    task=aicard_eval.tasks.nlp.text_classification,
     batch_size=4)
 
 print(metrics)
+```
+

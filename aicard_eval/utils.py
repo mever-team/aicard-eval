@@ -5,7 +5,7 @@ import sys
 import yaml
 import datasets
 import pandas as pd
-from evaluation import tasks
+from . import tasks
 
 
 def human_readable_time(seconds: float) -> str:
