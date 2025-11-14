@@ -1,7 +1,0 @@
-datasets
-numpy
-validators
-scikit-learn
-scikit-image
-jiwer
-psutil

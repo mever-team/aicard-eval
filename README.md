@@ -12,6 +12,10 @@ To install use:
 ```
 conda create -n aicard-eval python=3.11
 conta activate aicard-eval
+pip install aicard-eval
+```
+or if you clone this repo
+```
 pip install -e .
 ```
 Follow the script bellow. The aicard-eval will choose the correct metrics corresponding to your case. For more examples see the examples/ folder. 
@@ -21,7 +25,6 @@ You can use datasets and models from service providers e.g. huggingface or you c
 ```python
 import aicard_eval
 from datasets import load_dataset
-from huggingface_hub import dataset_info
 from transformers import pipeline
 
 # 1) Load your model
