@@ -1,19 +1,41 @@
-import evaluation
-import numpy as np
+from PIL import Image
+import io
+import aicard_eval
+from transformers import DetrImageProcessor, DetrForObjectDetection
+import torch
+from datasets import load_dataset
 
 
-def preds(data):
- return [{
-    "boxes": np.array([[296.55, 93.96, 314.97, 152.79],
-                       [298.55, 98.96, 314.97, 151.79]], dtype=np.float32),
-    "labels": np.array([4, 5], dtype=np.int64),
-    "scores": np.array([0.9, 0.8], dtype=np.float32)}]
+dataset = load_dataset("rishitdagli/cppe-5", split='test').select(range(5))
 
-metrics = evaluation.evaluate(
-    data={
-        "boxes": [[[300.00, 100.00, 315.00, 150.00],[300.00, 100.00, 315.00, 150.00]]],
-        "labels": [[4,5]]},
-    pipeline=preds,
-    task=evaluation.tasks.vision.object_detection)
+processor = DetrImageProcessor.from_pretrained('devonho/detr-resnet-50_finetuned_cppe5')
+model = DetrForObjectDetection.from_pretrained('devonho/detr-resnet-50_finetuned_cppe5').to('cuda')
 
-print(metrics['metrics'])
+def pipeline(data):
+    images = [Image.open(io.BytesIO(img['bytes'])).convert("RGB") for img in data['image']]
+
+    inputs = processor(images=images, return_tensors="pt").to('cuda')
+    outputs = model(**inputs)
+
+    target_sizes = torch.tensor([image.size[::-1] for image in images]).to('cuda')
+    resultss = processor.post_process_object_detection(outputs, target_sizes=target_sizes, threshold=0.9)
+
+    for results in resultss:
+        print('')
+        for score, label, box in zip(results["scores"], results["labels"], results["boxes"]):
+            box = [round(i, 2) for i in box.tolist()]
+            print(
+                    f"Detected {model.config.id2label[label.item()]} with confidence "
+                    f"{round(score.item(), 3)} at location {box}"
+            )
+    
+    input()
+    
+
+metrics = aicard_eval.evaluate(
+    data=dataset,
+    pipeline=pipeline,
+    task=aicard_eval.tasks.vision.object_detection,
+    batch_size=1)
+
+print(metrics)
