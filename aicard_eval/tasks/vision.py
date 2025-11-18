@@ -26,7 +26,7 @@ object_detection = Task(
     metrics=[metrics.precision_macro, metrics.precision_micro, metrics.f1_macro, metrics.f1_micro], # TODO: metrics.map, metrics.IoU
     parameters=params.object_detection,
     toinstance=(
-            [dict[str, np.ndarray], Tuple[list[list[int]], list[int], list[float]], list[int], list[float]],
+            [dict[str, list], Tuple[list[list[int]], list[int], list[float]], list[int], list[float]],
             lambda x: (
                 isinstance(x, list)
                 and len(x) == 3
@@ -46,11 +46,11 @@ object_detection = Task(
                 isinstance(x, dict)
                 and len(x)==3
                 and "scores" in x
-                and isinstance(x["scores"], np.ndarray)
+                and isinstance(x["scores"], list)
                 and "labels" in x
-                and isinstance(x["labels"], np.ndarray)
+                and isinstance(x["labels"], list)
                 and "boxes" in x
-                and isinstance(x["boxes"], np.ndarray)
+                and isinstance(x["boxes"], list)
             ),
         ),
 )
