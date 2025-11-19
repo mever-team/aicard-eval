@@ -23,7 +23,7 @@ image_segmentation = Task(
 object_detection = Task(
     "Object Detection",
     targets=Task.targets.objdetect, # special value
-    metrics=[metrics.precision_macro, metrics.precision_micro, metrics.f1_macro, metrics.f1_micro], # TODO: metrics.map, metrics.IoU
+    metrics=[metrics.IoU, metrics.precision_macro, metrics.precision_micro, metrics.f1_macro, metrics.f1_micro],
     parameters=params.object_detection,
     toinstance=(
             [dict[str, list], Tuple[list[list[int]], list[int], list[float]], list[int], list[float]],

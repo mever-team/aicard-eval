@@ -28,6 +28,7 @@ def evaluate(
     num_classes:int|None=None,  # in case the preds have more classes than target
     batch_size:int=1,
     anns: list[list[dict]]|list[dict]|None=None,
+    box_format = None
 ) -> dict:
     if anns is None:
         anns = [None]
@@ -52,8 +53,10 @@ def evaluate(
         preds=preds,
         target_column=target_column,
         num_classes=num_classes,
-        anns=anns
+        anns=anns,
     )
+    if box_format:
+        kwargs['box_format'] = 'xywh'
 
     if 'num_classes' in kwargs and kwargs['num_classes'] == 2: task.metrics.append(aicard_eval.metrics.precision_recall_curves)
     start = time.time()

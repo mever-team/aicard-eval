@@ -12,6 +12,12 @@ dataset = load_dataset("rishitdagli/cppe-5", split='test').select(range(5))
 processor = DetrImageProcessor.from_pretrained('devonho/detr-resnet-50_finetuned_cppe5')
 model = DetrForObjectDetection.from_pretrained('devonho/detr-resnet-50_finetuned_cppe5').to('cuda')
 
+def xyxy_to_xywh(box):
+    x1, y1, x2, y2 = box
+    w = x2 - x1
+    h = y2 - y1
+    return [x1, y1, w, h]
+
 def pipeline(data):
     images = [Image.open(io.BytesIO(img['bytes'])).convert("RGB") for img in data['image']]
 
@@ -31,21 +37,19 @@ def pipeline(data):
                     f"{round(score.item(), 3)} at location {box}"
             )
     
-    boxess = [results["boxes"].cpu().tolist() for results in resultss]
-    labelss = [results["labels"].cpu().tolist() for results in resultss]
-    scoress = [results["scores"].cpu().tolist() for results in resultss]
-    
-    
-    return [{
-        "boxes": boxess,
-        "labels": labelss,
-        "scores": scoress}]
+    out = []
+    for results in resultss:
+        out.append({"boxes": [xyxy_to_xywh(box) for box in results["boxes"].cpu().tolist()],
+                    "labels": results["labels"].cpu().tolist(),
+                    "scores": results["scores"].cpu().tolist()}) 
+    return out
     
 
 metrics = aicard_eval.evaluate(
     data=dataset,
     pipeline=pipeline,
     task=aicard_eval.tasks.vision.object_detection,
-    batch_size=5)
+    batch_size=3,
+    box_format='xywh')
 
 print(metrics)

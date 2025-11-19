@@ -18,7 +18,7 @@ def main(data, preds, target_column, num_classes, anns):
     iou_type = "bbox"
 
     img_column, src_type = determine_img_column_src_type(data)
-    box_format = determine_box_format(data, anns_source, img_column, src_type, bbox_column)
+    # box_format = determine_box_format(data, anns_source, img_column, src_type, bbox_column)
 
     preds_ready = prepare_preds(preds)
     target_ready = prepare_target(anns_source, target_column, label_column, obj_column, bbox_column)
@@ -27,7 +27,7 @@ def main(data, preds, target_column, num_classes, anns):
         "preds": np.array(preds_ready),
         "target": np.array(target_ready),
         "iou_type": iou_type,
-        "box_format": box_format,
+        # "box_format": box_format,
         "task": "MULTILABEL",
         "num_classes": num_classes
     }
@@ -104,8 +104,8 @@ def prepare_target(anns_source, target_column, label_column, obj_column, bbox_co
             for boxes_target, cat_ids_target in zip(batch[bbox_column], batch[label_column]):
                 if (boxes_target is not None) and (cat_ids_target is not None):  # prevent reading None values that the convertion to datasets creates
                     target_ready.append({
-                        "boxes": np.array(boxes_target),#.to(device),
-                        "labels": np.array(cat_ids_target),#.to(device),
+                        "boxes": np.array(boxes_target),
+                        "labels": np.array(cat_ids_target),
                     })
     else:
         # obj, bbox, label = target
@@ -118,8 +118,8 @@ def prepare_target(anns_source, target_column, label_column, obj_column, bbox_co
                         cat_ids_target is not None
                     ):  # prevent reading None values that the convertion to datasets creates
                         target_ready.append({
-                            "boxes": np.array(boxes_target),#.to(device),
-                            "labels": np.array(cat_ids_target)#.to(device),
+                            "boxes": np.array(boxes_target),
+                            "labels": np.array(cat_ids_target)
                         })
         else:  # elif isinstance(data[obj], list)
             for batch in anns_source:
@@ -128,7 +128,7 @@ def prepare_target(anns_source, target_column, label_column, obj_column, bbox_co
                         object[label_column] is not None
                     ):  # prevent reading None values that the convertion to datasets creates
                         target_ready.append({
-                            "boxes": np.array(object[bbox_column]),#.to(device),
-                            "labels": np.array(object[label_column]),#.to(device),
+                            "boxes": np.array(object[bbox_column]),
+                            "labels": np.array(object[label_column]),
                         })
     return target_ready
