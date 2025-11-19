@@ -1,6 +1,8 @@
 from datetime import datetime
 import time
 import inspect
+import pickle
+import os
 
 import aicard_eval
 from .utils import (human_readable_time,
@@ -19,11 +21,33 @@ def autocall(metric, **kwargs):
     except TypeError as e:
         print(e)
         return None
+    
+def pipeline_loop(data, pipeline, cache_path):
+    if os.path.exists(cache_path):
+        print(f"Loading cache from {cache_path}")
+        with open(cache_path, "rb") as f:
+            cache = pickle.load(f)
+        return cache["preds"], cache["execution_time"]
+
+    preds = []
+    start = time.time()
+    for batch in data:
+        preds.extend(pipeline(batch))
+    pipe_execution_time = time.time() - start
+
+    with open(cache_path, "wb") as f:
+        pickle.dump({
+            "preds": preds,
+            "execution_time": pipe_execution_time
+        }, f)
+
+    return preds, pipe_execution_time
 
 def evaluate(
     data: "path or data",
     pipeline: callable,
     task: aicard_eval.tasks.Task,
+    cache_path: str,
     target_column:str|None=None,
     num_classes:int|None=None,  # in case the preds have more classes than target
     batch_size:int=1,
@@ -43,11 +67,8 @@ def evaluate(
     out_sample = pipeline(data[0])
     task.assert_output_type(out_sample[0])
 
-    preds = []
-    start = time.time()
-    for batch in data:
-        preds.extend(pipeline(batch))
-    pipe_execution_time = time.time() - start
+    preds, pipe_execution_time = pipeline_loop(data, pipeline, cache_path)
+    
     kwargs = task.parameters(
         data=data,
         preds=preds,
@@ -62,7 +83,6 @@ def evaluate(
     start = time.time()
     metrics = {metric.__name__: autocall(metric, **kwargs) for metric in task.metrics}
     metrics_execution_time = time.time() - start
-    # metrics = {k: float(v) for k,v in metrics.items() if v is not None}
 
     caller_path = inspect.stack()[1].filename
     with open(caller_path, 'r') as f:

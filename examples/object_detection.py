@@ -28,15 +28,6 @@ def pipeline(data):
     target_sizes = torch.tensor([image.size[::-1] for image in images]).to('cuda')
     resultss = processor.post_process_object_detection(outputs, target_sizes=target_sizes, threshold=0.9)
     
-    for results in resultss:
-        print('')
-        for score, label, box in zip(results["scores"], results["labels"], results["boxes"]):
-            box = [round(i, 2) for i in box.tolist()]
-            print(
-                    f"Detected {model.config.id2label[label.item()]} with confidence "
-                    f"{round(score.item(), 3)} at location {box}"
-            )
-    
     out = []
     for results in resultss:
         out.append({"boxes": [xyxy_to_xywh(box) for box in results["boxes"].cpu().tolist()],
@@ -48,6 +39,7 @@ def pipeline(data):
 metrics = aicard_eval.evaluate(
     data=dataset,
     pipeline=pipeline,
+    cache_path='cache.pkl',
     task=aicard_eval.tasks.vision.object_detection,
     batch_size=3,
     box_format='xywh')
