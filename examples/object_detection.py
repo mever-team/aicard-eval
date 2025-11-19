@@ -6,6 +6,8 @@ from transformers import DetrImageProcessor, DetrForObjectDetection
 import torch
 from datasets import load_dataset
 
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
 
 dataset = load_dataset("rishitdagli/cppe-5", split='test').select(range(5))
 
