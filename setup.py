@@ -15,6 +15,7 @@ setup(
                     "scikit-image",
                     "jiwer",
                     "psutil",
+                    "od-metrics",
                       ],
     description="Evaluation module for aicard.",
     author="CERTH",

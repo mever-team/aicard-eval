@@ -99,6 +99,6 @@ def evaluate(
         'execution_time': f'inference: {human_readable_time(pipe_execution_time)}, metrics: {human_readable_time(metrics_execution_time)}',
         }
 
-    if 'num_classes' in kwargs:out['num_classes'] = kwargs['num_classes']
+    if 'num_classes' in kwargs and kwargs['num_classes']: out['num_classes'] = kwargs['num_classes']
 
     return out

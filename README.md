@@ -3,7 +3,7 @@
 This is a package created under the AI-CODE and it's part of the transparency services for AI model cards. Its purpose is to provide a single tool for evaluating AI models. The output is standardized and ment (but not restricted) to be used as an import for aicard package.
 
 *Notice:*
-*This is an alpha version. Suported cases are text and image binary, multiclass, and multilabel classifications*
+*This is an alpha version. Some functions might not work as intended. Suported cases are text and image classifications (binary, multiclass, and multilabel),  and object detection.*
 
 ## ⚡ Quickstart
 

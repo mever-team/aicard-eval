@@ -15,7 +15,7 @@ depth_estimation = Task(
 image_segmentation = Task(
     "Image Segmentation",
     targets=Task.targets.segmentation, # special value
-    metrics=[metrics.IoU,metrics.dice_macro, metrics.dice_micro], # TODO: pixel acc, metrics.map
+    metrics=[metrics.iou,metrics.dice_macro, metrics.dice_micro], # TODO: pixel acc, metrics.map
     parameters=params.unknown,
     toinstance=([np.ndarray], lambda x: isinstance(x, np.ndarray)),
 )
@@ -23,7 +23,7 @@ image_segmentation = Task(
 object_detection = Task(
     "Object Detection",
     targets=Task.targets.objdetect, # special value
-    metrics=[metrics.IoU, metrics.precision_macro, metrics.precision_micro, metrics.f1_macro, metrics.f1_micro],
+    metrics=[metrics.od_metrics],
     parameters=params.object_detection,
     toinstance=(
             [dict[str, list], Tuple[list[list[int]], list[int], list[float]], list[int], list[float]],
@@ -145,7 +145,7 @@ text_to_video = Task(
 mask_generation = Task(
     "Text to Video",
     targets=Task.targets.mask,
-    metrics=[metrics.IoU, metrics.dice_macro, metrics.dice_micro], # TODO: Pixel Accuracy
+    metrics=[metrics.iou, metrics.dice_macro, metrics.dice_micro], # TODO: Pixel Accuracy
     parameters=params.unknown,  # TODO: WAS NOT CLEAR
     toinstance=([np.ndarray], lambda x: isinstance(x, np.ndarray)),
 )
