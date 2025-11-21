@@ -1,5 +1,5 @@
 class targets:
-    text = ["solution","answer","output","response","conversations","inferences","messages","texts","caption",]
+    text = ["solution","answer","output","response","conversations","inferences","messages","texts","caption","summary",]
     image = ["image","url"]
     video = ["video","url","video_path","video_file",]
     classes = ["label","class_name","ground_truth","emotion",]

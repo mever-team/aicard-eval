@@ -42,7 +42,6 @@ def pipeline(data):
 metrics = aicard_eval.evaluate(
     data=dataset,
     pipeline=pipeline,
-    cache_path='cache.pkl',
     task=aicard_eval.tasks.vision.object_detection,
     batch_size=5,
     box_format='xywh')

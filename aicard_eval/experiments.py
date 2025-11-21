@@ -23,7 +23,7 @@ def autocall(metric, **kwargs):
         return None
     
 def pipeline_loop(data, pipeline, cache_path):
-    if os.path.exists(cache_path):
+    if cache_path:
         print(f"Loading cache from {cache_path}")
         with open(cache_path, "rb") as f:
             cache = pickle.load(f)
@@ -35,7 +35,7 @@ def pipeline_loop(data, pipeline, cache_path):
         preds.extend(pipeline(batch))
     pipe_execution_time = time.time() - start
 
-    with open(cache_path, "wb") as f:
+    with open('cache.pkl', "wb") as f:
         pickle.dump({
             "preds": preds,
             "execution_time": pipe_execution_time
@@ -47,7 +47,7 @@ def evaluate(
     data: "path or data",
     pipeline: callable,
     task: aicard_eval.tasks.Task,
-    cache_path: str,
+    cache_path: str = None,
     target_column:str|None=None,
     num_classes:int|None=None,  # in case the preds have more classes than target
     batch_size:int=1,
@@ -79,7 +79,7 @@ def evaluate(
     if box_format:
         kwargs['box_format'] = 'xywh'
 
-    if 'num_classes' in kwargs and kwargs['num_classes'] == 2: task.metrics.append(aicard_eval.metrics.precision_recall_curves)
+    if 'num_classes' in kwargs and kwargs['num_classes'] == 2: task.metrics.append(aicard_eval.metrics.precision_recall_curve)
     start = time.time()
     metrics = {metric.__name__: autocall(metric, **kwargs) for metric in task.metrics}
     metrics_execution_time = time.time() - start

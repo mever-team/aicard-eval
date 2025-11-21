@@ -8,7 +8,7 @@ from sklearn.metrics import (
     roc_auc_score,
     mean_absolute_error,
     mean_squared_error,
-    precision_recall_curve,
+    precision_recall_curve as pr_curve,
 )
 from skimage.metrics import structural_similarity as sk_ssim
 from skimage.metrics import peak_signal_noise_ratio as sk_psnr
@@ -32,8 +32,8 @@ def recall_micro(preds, target, task, num_classes):return recall_score(to_labels
 def recall_macro(preds, target, task, num_classes):return recall_score(to_labels(target), to_labels(preds), average="macro", zero_division=0)
 def recall_weighted(preds, target, task, num_classes):return recall_score(target, preds, average="weighted", zero_division=0)
 
-def precision_recall_curves(preds, target, task='binary', num_classes=2):
-    precision, recall, thresholds = precision_recall_curve(y_true=target, y_score=preds)
+def precision_recall_curve(preds, target, task='binary', num_classes=2):
+    precision, recall, thresholds = pr_curve(y_true=target, y_score=preds)
     return {'precision_curve': precision, 'recall_curve': recall, 'thresholds': thresholds}
 
 def auc_roc_macro(preds, target, task, num_classes):return roc_auc_score(target, preds, average="macro", multi_class="ovr")

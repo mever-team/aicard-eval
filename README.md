@@ -45,7 +45,7 @@ def pipeline(data):
             out.append([flat[name] for name in class_names])
         return out
 
-# 4) call the aicard-eval evaluation function
+# 4) call the aicard-eval evaluate function
 metrics = aicard_eval.evaluate(
     data=dataset,
     pipeline=pipeline,
@@ -74,3 +74,36 @@ print(metrics)
 # 'num_classes': 28}
 ```
 
+
+## 💡 Pipeline Instructions
+
+The pipeline funtion is the inference loop that the evaluate function calls to generate the predictions of the model. It is completely abstract which means it can contain whatever the user wants. There are only two rules to follow to construct the pipeline:
+
+1) It must have a single function parameter `def pipeline(data)`
+2) It must return a specific format depending on the task.
+
+The package supports several formats for each task but until they are thoroughly tested here is a list you can follow:
+| Task | Return Format | Example |
+|----------|----------|----------|
+| Binary Classification    | `list[int]` | `[0,1,0,0]` |
+| Multi-class Classification    | `list[int]` |  `[2,9,3,0]` |
+| Multi-label Classification    | `list[list[int]]` |  `[[2],[9,3],[3,0,1],[0]]` |
+| Object Detection    | `list[dict]` | `[`<br>`{`<br>`"boxes": [[25, 27, 37, 54], [119, 111, 40, 67]],`<br>`"labels": [0, 1],`<br>`"scores": [.88, .70]`<br>`},`<br>`{`<br>`"boxes": [[64, 111, 64, 58]],`<br>`"labels": [0],`<br>`"scores": [.71]`<br>`}`<br>`]` |
+
+<br>
+
+On the other hand `data` is basically the dataset the user imported split into batches of size `batch_size`. A loop will call the pipeline function until all batches are processed by it. The `data` is a dictionary of lists `dict[str, list]`. For example if we import a .csv:
+
+```
+name, age
+Alice, 30
+Bob, 25
+Charlie, 35
+```
+with `batch_size=3` then 
+```
+>>> data['name']
+['Alice', 'Bob', 'Charlie']
+>>> data['age'][0]
+30
+```
