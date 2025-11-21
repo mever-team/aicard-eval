@@ -82,13 +82,47 @@ The pipeline funtion is the inference loop that the evaluate function calls to g
 1) It must have a single function parameter `def pipeline(data)`
 2) It must return a specific format depending on the task.
 
-The package supports several formats for each task but until they are thoroughly tested here is a list you can follow:
-| Task | Return Format | Example |
-|----------|----------|----------|
-| Binary Classification    | `list[int]` | `[0,1,0,0]` |
-| Multi-class Classification    | `list[int]` |  `[2,9,3,0]` |
-| Multi-label Classification    | `list[list[int]]` |  `[[2],[9,3],[3,0,1],[0]]` |
-| Object Detection    | `list[dict]` | `[`<br>`{`<br>`"boxes": [[25, 27, 37, 54], [119, 111, 40, 67]],`<br>`"labels": [0, 1],`<br>`"scores": [.88, .70]`<br>`},`<br>`{`<br>`"boxes": [[64, 111, 64, 58]],`<br>`"labels": [0],`<br>`"scores": [.71]`<br>`}`<br>`]` |
+<table border="1" cellpadding="5" cellspacing="0">
+  <tr>
+    <th>Task</th>
+    <th>Return Format</th>
+    <th>Example</th>
+  </tr>
+  <tr>
+    <td>Binary Classification</td>
+    <td><code>list[int]</code></td>
+    <td><pre><code>[0,1,0,0]</code></pre></td>
+  </tr>
+  <tr>
+    <td>Multi-class Classification</td>
+    <td><code>list[int]</code></td>
+    <td><pre><code>[2,9,3,0]</code></pre></td>
+  </tr>
+  <tr>
+    <td>Multi-label Classification</td>
+    <td><code>list[list[int]]</code></td>
+    <td><pre><code>[[2],[9,3],[3,0,1],[0]]</code></pre></td>
+  </tr>
+  <tr>
+    <td>Object Detection</td>
+    <td><code>list[dict]</code></td>
+    <td>
+      <pre><code>[
+    {
+    "boxes": [[25, 27, 37, 54], [119, 111, 40, 67]],
+    "labels": [0, 1],
+    "scores": [.88, .70]
+    },
+    {
+    "boxes": [[64, 111, 64, 58]],
+    "labels": [0],
+    "scores": [.71]
+    }
+]</code></pre>
+    </td>
+  </tr>
+</table>
+
 
 <br>
 
