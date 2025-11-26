@@ -2,7 +2,7 @@ from datetime import datetime
 import time
 import inspect
 import pickle
-import os
+from .emissions import Emission
 
 import aicard_eval
 from .utils import (human_readable_time,
@@ -66,8 +66,12 @@ def evaluate(
     target_column = check_validity_of_target(anns[0] if len(anns.features) else data[0], task, target_column)
     out_sample = pipeline(data[0])
     task.assert_output_type(out_sample[0])
-
+    
+    emissions = Emission()
+    emissions.start()
     preds, pipe_execution_time = pipeline_loop(data, pipeline, cache_path)
+    emissions.stop()
+    emission = emissions.get()
     
     kwargs = task.parameters(
         data=data,
@@ -95,8 +99,9 @@ def evaluate(
         'metrics': metrics,
         'batch_size': batch_size,
         'code': caller_content,
-        'hardware': get_hardware_info(),
+        'hardware': get_hardware_info(emission),
         'execution_time': f'inference: {human_readable_time(pipe_execution_time)}, metrics: {human_readable_time(metrics_execution_time)}',
+        'emmisions': f"{emission['power_consumption(kWh)'][0]} kWh, ",
         }
 
     if 'num_classes' in kwargs and kwargs['num_classes']: out['num_classes'] = kwargs['num_classes']

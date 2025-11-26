@@ -25,15 +25,15 @@ def human_readable_time(seconds: float) -> str:
         sec = seconds % 60
         return f"{hours}h {minutes}min {sec:.2f}s"
 
-def get_hardware_info():
-    cpu_info = "Not found"
-    try:
-        with open("/proc/cpuinfo") as f:
-            for line in f:
-                if "model name" in line:
-                    cpu_info = line.strip().split(":")[1].strip()
-    except FileNotFoundError:
-        cpu_info = platform.processor() or platform.machine()
+def get_hardware_info(emission):
+    # cpu_info = "Not found"
+    # try:
+    #     with open("/proc/cpuinfo") as f:
+    #         for line in f:
+    #             if "model name" in line:
+    #                 cpu_info = line.strip().split(":")[1].strip()
+    # except FileNotFoundError:
+    #     cpu_info = platform.processor() or platform.machine()
 
     ram_bytes = psutil.virtual_memory().total
     ram_gb = round(ram_bytes / (1024 ** 3), 2)
@@ -58,7 +58,7 @@ def get_hardware_info():
         except FileNotFoundError:
             pass
 
-    return f"CPU: {cpu_info}, RAM: {ram_gb} GB, CUDA: {cuda_version}"
+    return f"CPU: {emission['CPU_name']}, RAM: {ram_gb} GB, GPU: {emission['GPU_name']} CUDA: {cuda_version}"
 
 
 def is_path(s):
