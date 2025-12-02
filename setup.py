@@ -16,7 +16,9 @@ setup(
                     "jiwer",
                     "psutil",
                     "od-metrics",
-                    "eco2ai"
+                    "eco2ai",
+                    "html2text",
+                    "markdown2",
                       ],
     description="Evaluation module for aicard.",
     author="CERTH",

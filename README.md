@@ -49,13 +49,14 @@ def pipeline(data):
 metrics = aicard_eval.evaluate(
     data=dataset,
     pipeline=pipeline,
-    task=aicard_eval.tasks.vision.image_classification,
+    task=aicard_eval.tasks.nlp.text_classification,
     batch_size=32)
 
 print(metrics)
 # {'package version': '0.1.0', 
 # 'datetime': '2025-Nov-14 14:54', 
 # 'task': 'Text Classification', 
+# 'energy consumption': 0.0006384167860318 kWh
 # 'metrics': {
 #     'precision_macro': 0.5090416420534856, 
 #     'precision_micro': 0.5741662060070021, 
