@@ -75,6 +75,18 @@ print(metrics)
 # 'num_classes': 28}
 ```
 
+or if you want the output in a model card format:
+
+```
+metrics = aicard_eval.evaluate(
+    data=dataset,
+    pipeline=pipeline,
+    task=aicard_eval.tasks.nlp.text_classification,
+    batch_size=32,
+    as_card=True)
+
+print(metrics)
+```
 
 ## 💡 Pipeline Instructions
 
