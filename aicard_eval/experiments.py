@@ -86,7 +86,7 @@ def evaluate(
     emissions.start()
     preds, pipe_execution_time = pipeline_loop(data, pipeline, cache_path)
     emissions.stop()
-    emission = emissions.get()
+    emission = emissions.pop()
     
     kwargs = task.parameters(
         data=data,
@@ -96,7 +96,7 @@ def evaluate(
         anns=anns,
     )
     if box_format:
-        kwargs['box_format'] = 'xywh'
+        kwargs['box_format'] = box_format
 
     if 'num_classes' in kwargs and kwargs['num_classes'] == 2: task.metrics.append(aicard_eval.metrics.precision_recall_curve)
     start = time.time()

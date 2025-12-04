@@ -54,8 +54,6 @@ def cer(preds, target): return jiwer_cer(target, preds)
 def iou(): return None
 
 def od_metrics(preds, target): 
-    print(len(preds))
-    print(len(target))
     odmetrics = ODMetrics()
     return odmetrics.compute(target, preds)
 

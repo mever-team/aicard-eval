@@ -17,7 +17,7 @@ class Emission:
     def stop(self):
         self.tracker.stop()
 
-    def get(self):
+    def pop(self):
         with open(self.file_name, "r") as f:
             data = read_data(self.file_name)
         os.remove(self.file_name)

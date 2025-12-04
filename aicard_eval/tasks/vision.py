@@ -115,8 +115,11 @@ image_to_video = Task(
 video_classification = Task(
     "Video Classification",
     targets=Task.targets.classes,
-    metrics=[metrics.precision_macro, metrics.precision_micro, metrics.recall_macro, metrics.recall_micro,
-             metrics.f1_macro, metrics.f1_micro, metrics.auc_roc_macro, metrics.auc_roc_macro],  # TODO: acc
+    metrics=[metrics.precision_macro, metrics.precision_micro,
+             metrics.recall_macro, metrics.recall_micro,
+             metrics.top1_acc_micro, metrics.top1_acc_macro, metrics.top1_acc_weighted,
+             metrics.f1_macro, metrics.f1_micro,
+             metrics.auc_roc_macro, metrics.auc_roc_weighted],
     parameters=params.classification,
     toinstance=(
         [np.ndarray, int, float, list[float], str, dict[str, float]],
