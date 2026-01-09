@@ -8,7 +8,7 @@ depth_estimation = Task(
     "Depth Estimation",
     targets=Task.targets.depth,
     metrics=[metrics.mae, metrics.rmse, metrics.ssim, metrics],  # TODO: sirmse (Scale-Invariant rmse)
-    parameters=params.classification,                            # TODO: WAS NOT CLEAR
+    parameters=params.classification, 
     toinstance=([np.ndarray], lambda x: isinstance(x, np.ndarray)),
 )
 
@@ -84,7 +84,7 @@ text_to_image = Task(
     "Text to Image",
     targets=Task.targets.image,
     metrics=[metrics.ssim], # TODO: Inception Score (IS), Fréchet Inception Distance (fid), CLIPScore
-    parameters=params.unknown,  # TODO: WAS NOT CLEAR - I PUT ONE AT RANDOM (Manios)
+    parameters=params.unknown,
     toinstance= ([np.ndarray], lambda x: isinstance(x, np.ndarray)),
 )
 
@@ -92,7 +92,7 @@ image_to_text = Task(
     "Image to Text",
     targets=Task.targets.text,
     metrics=[],  # TODO: blue, rouge, meteor, CIDEr, spice
-    parameters=params.classification,  # TODO: WAS NOT CLEAR
+    parameters=params.classification, 
     toinstance=([str], lambda x: isinstance(x, str)),
 )
 
@@ -100,7 +100,7 @@ image_to_image = Task(
     "Image to Image",
     targets=Task.targets.image,
     metrics=[metrics.ssim, metrics.psnr],  # TODO: lpips (Perceptual Loss)
-    parameters=params.unknown,  # TODO: WAS NOT CLEAR - I PUT ONE AT RANDOM (Manios)
+    parameters=params.unknown, 
     toinstance=([np.ndarray], lambda x: isinstance(x, np.ndarray))
 )
 
@@ -108,7 +108,7 @@ image_to_video = Task(
     "Image to Video",
     targets=Task.targets.video,
     metrics=[metrics.ssim, metrics.psnr],  # TODO: FVD (Fréchet Video Distance)
-    parameters=params.unknown,             # TODO: WAS NOT CLEAR AT ALL
+    parameters=params.unknown,
     toinstance=(list[np.ndarray],lambda x: isinstance(x, list) and all(isinstance(t, np.ndarray) for t in x),),
 )
 
@@ -141,7 +141,7 @@ text_to_video = Task(
     "Text to Video",
     targets=Task.targets.video,
     metrics=[metrics.ssim],     # TODO: FVD, IS, Fid
-    parameters=params.unknown,  # TODO: WAS NOT CLEAR
+    parameters=params.unknown,
     toinstance=(list[np.ndarray],lambda x: isinstance(x, list) and all(isinstance(t, np.ndarray) for t in x),),
 )
 
@@ -149,7 +149,7 @@ mask_generation = Task(
     "Text to Video",
     targets=Task.targets.mask,
     metrics=[metrics.iou, metrics.dice_macro, metrics.dice_micro], # TODO: Pixel Accuracy
-    parameters=params.unknown,  # TODO: WAS NOT CLEAR
+    parameters=params.unknown, 
     toinstance=([np.ndarray], lambda x: isinstance(x, np.ndarray)),
 )
 
@@ -157,7 +157,7 @@ image_feature_extraction = Task(
     "Image Feature Extraction",
     targets=Task.targets.imgfeatextr,
     metrics=[], # TODO: Cosine Similarity,Euclidean Distance,lpips
-    parameters=params.unknown,  # TODO: WAS NOT CLEAR
+    parameters=params.unknown, 
     toinstance=([np.ndarray], lambda x: isinstance(x, np.ndarray)),
 )
 
@@ -165,7 +165,7 @@ keypoint_detection = Task(
     "Keypoint Detection",
     targets=Task.targets.keypoint,
     metrics=[metrics.rmse],     # TODO: Percentage of Correct Keypoints (PCK), Normalized Mean Error (NME), Mean Squared Error (MSE)
-    parameters=params.unknown,  # TODO: WAS NOT CLEAR
+    parameters=params.unknown, 
     toinstance=(
         list[Tuple[int, int]],
         lambda x: isinstance(x, list)
