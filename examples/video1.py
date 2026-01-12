@@ -15,7 +15,7 @@ processor = VideoMAEImageProcessor.from_pretrained(model_id)
 model = VideoMAEForVideoClassification.from_pretrained(model_id).to(device)
 
 # Step 2: Load dataset
-dataset = load_dataset("aisuko/ucf101-subset", split='train')
+dataset = load_dataset("aisuko/ucf101-subset", split='train') # first 10 classes of ucf101
 split = []
 labels = []
 for data in dataset:
@@ -28,18 +28,26 @@ dataset_test = dataset.filter(lambda x: x["split"] == "test")
 
 # Step 3: Define pipeline
 def pipeline(data):
+    # prepare input
     with tempfile.NamedTemporaryFile(suffix=".avi", delete=True) as f:
         f.write(data['avi'][0])
         f.flush()
         vr = VideoReader(f.name, ctx=cpu(0))
     indices = np.linspace(0, len(vr) - 1, 16).astype(int) # 16 frames
     frames = vr.get_batch(indices).asnumpy()
-    
     inputs = processor(list(frames), return_tensors="pt").to(device)
+    
+    # inference and logits (first 10 classes)
     with torch.no_grad():
         outputs = model(**inputs)
-        pred_idx = outputs.logits.argmax(-1).item()
-    return [pred_idx]
+        pred_idx = outputs.logits.cpu().tolist()[0][0:10]
+    
+    # probabilities
+    logits = np.array(pred_idx)
+    exp_logits = np.exp(logits - np.max(logits)) # subtract max for numerical stability
+    probabilities = exp_logits / np.sum(exp_logits)
+
+    return [probabilities.tolist()]
 
 # Step 4: Run evaluation
 metrics = aicard_eval.evaluate(
