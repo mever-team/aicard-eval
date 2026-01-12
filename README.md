@@ -99,7 +99,7 @@ The package supports several formats for each task but until they are thoroughly
 | Task | Return Format | Example |
 |----------|----------|----------|
 | Binary Classification    | list [ int ] | [ 0,1,0,0 ] |
-| Multi-class Classification    | list[ int ] |  [ 2,9,3,0 ] |
+| Multi-class Classification    | list[ list[ float ] ] |  [ [0.654, 0.125, 0.471], [0.268, 0.659, 0.073]] |
 | Multi-label Classification    | list[ list[ int ] ] |  [ [ 2 ],[ 9,3 ],[ 3,0,1 ],[ 0 ] ] |
 | Object Detection    | list[ dict ] | [{<br>"boxes": [ [ 25, 27, 37, 54 ], [ 119, 111, 40, 67 ] ],<br>"labels": [ 0, 1 ],<br>"scores": [ .88, .70 ]<br>},<br>{<br>"boxes": [ [ 64, 111, 64, 58 ] ],<br>"labels": [ 0 ],<br>"scores": [ .71 ]`<br>}] |
 
