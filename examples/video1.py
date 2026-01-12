@@ -56,3 +56,25 @@ metrics = aicard_eval.evaluate(
     task=aicard_eval.tasks.vision.video_classification)
 
 pprint(metrics)
+# {'batch_size': 1,
+#  'datetime': '2026-Jan-12 13:39',
+#  'energy_consumption': '0.0001625975238753 kWh, ',
+#  'execution_time': 'inference: 5.82s, metrics: 12.48ms',
+#  'hardware': "CPU: ['AMD Ryzen 7 7800X3D 8-Core Processor/1 device(s), "
+#              "TDP:120.0'], RAM: 15.62 GB, GPU: ['NVIDIA GeForce RTX 4070 SUPER "
+#              "1 device(s)'] CUDA: | NVIDIA-SMI 590.44.01              Driver "
+#              'Version: 591.44         CUDA Version: 13.1     |',
+#  'metrics': {'auc_roc_macro': 1.0,
+#              'auc_roc_weighted': 1.0,
+#              'f1_macro': 1.0,
+#              'f1_micro': 1.0,
+#              'precision_macro': 1.0,
+#              'precision_micro': 1.0,
+#              'recall_macro': 1.0,
+#              'recall_micro': 1.0,
+#              'top1_acc_macro': 1.0,
+#              'top1_acc_micro': 1.0,
+#              'top1_acc_weighted': 1.0},
+#  'num_classes': 10,
+#  'package_version': '0.1.2',
+#  'task': 'Video Classification'}
