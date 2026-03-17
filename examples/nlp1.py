@@ -26,7 +26,6 @@ metrics = aicard_eval.evaluate(
     data=dataset.select(range(200)),
     pipeline=pipeline,
     task=aicard_eval.tasks.nlp.text_classification,
-    batch_size=4,
-    as_card=True)
+    batch_size=4)
 
 print(metrics.to_markdown())

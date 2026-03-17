@@ -6,8 +6,45 @@ import yaml
 import datasets
 import pandas as pd
 from . import tasks
+import requests
 
+def upload(username: str,
+           password: str,
+           metrics: dict,
+           card_id: int,
+           base_url='https://trai.mever.gr'):
+    url_prefix = '/transparency'
+    # login
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    }
+    data = {
+        "username": username,
+        "password": password
+    }
+    response = requests.post(base_url + url_prefix + '/login', headers=headers, json=data)
+    if response.status_code !=200:
+        print(f"Error {response.status_code}: {response.text}")
+    response_json = response.json()
+    token = response_json['token']
+    # upload
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+    }
+    response = requests.post(base_url + url_prefix + '/eval_adapter/' + str(card_id), headers=headers, json=metrics)
+    if response.status_code != 200:
+        print(f"Error {response.status_code}: {response.text}")
+        
+    print('Model card updated successfully: ' + base_url+url_prefix+'/model_card.html?id='+str(card_id))
 
+def emissionReadableFormat(value):
+    if value < 0.001:  # less than 1 Wh
+        return f"{value * 1000:.3f} Wh"
+    else:
+        return f"{value:.3f} kWh"
+    
 def human_readable_time(seconds: float) -> str:
     if seconds < 1e-3:  # less than 1 millisecond
         return f"{seconds * 1e6:.2f}µs"

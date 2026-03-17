@@ -56,36 +56,30 @@ print(metrics)
 # {'package version': '0.1.0', 
 # 'datetime': '2025-Nov-14 14:54', 
 # 'task': 'Text Classification', 
-# 'energy consumption': 0.0006384167860318 kWh
+# 'energy consumption': 0.6384167860318 Wh
 # 'metrics': {
-#     'precision_macro': 0.5090416420534856, 
-#     'precision_micro': 0.5741662060070021, 
-#     'recall_macro': 0.46497245851260965, 
-#     'recall_micro': 0.5741662060070021, 
-#     'top1_acc_micro': 0.5741662060070021, 
-#     'top1_acc_macro': 0.5741662060070021, 
-#     'top1_acc_weighted': 0.5741662060070021, 
-#     'f1_macro': 0.4661938061623436, 
-#     'f1_micro': 0.5741662060070021, 
-#     'auc_roc_macro': 0.9286682043487104, 
-#     'auc_roc_weighted': 0.9099991445506153}, 
+#     'precision_macro': 0.509, 
+#     'precision_micro': 0.574, 
+#     'recall_macro': 0.464, 
+#     'recall_micro': 0.574, 
+#     'top1_acc_micro': 0.574, 
+#     'top1_acc_macro': 0.574, 
+#     'top1_acc_weighted': 0.574, 
+#     'f1_macro': 0.466, 
+#     'f1_micro': 0.574, 
+#     'auc_roc_macro': 0.928, 
+#     'auc_roc_weighted': 0.91}, 
 # 'batch_size': 32, 
 # 'hardware': 'CPU: AMD Ryzen 7 7800X3D 8-Core Processor, RAM: 15.62 GB, CUDA: | NVIDIA-SMI 580.102.01 Driver Version: 581.57  CUDA Version: 13.0|', 
 # 'execution_time': 'inference: 34.68s, metrics: 45.76ms', 
 # 'num_classes': 28}
 ```
 
-or if you want the output in a model card format:
+You can also upload your metrics to our model card database. This will create an html formated report of your inference run and store it in your own model card.
 
 ```
-metrics = aicard_eval.evaluate(
-    data=dataset,
-    pipeline=pipeline,
-    task=aicard_eval.tasks.nlp.text_classification,
-    batch_size=32,
-    as_card=True)
-
-print(metrics)
+from aicard_eval.utils import upload
+upload(username = USER_NAME, password = PASSWORD, metrics = metrics, card_id = 116)
 ```
 
 ## 💡 Pipeline Instructions

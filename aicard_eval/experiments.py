@@ -3,7 +3,7 @@ import time
 import inspect
 import pickle
 from .emissions import Emission
-from .card.model_card import ModelCard
+from .utils import emissionReadableFormat
 
 import aicard_eval
 from .utils import (human_readable_time,
@@ -44,19 +44,6 @@ def pipeline_loop(data, pipeline, cache_path):
 
     return preds, pipe_execution_time
 
-def evaluate_to_card(info: dict) -> ModelCard:
-    card = ModelCard()
-    card.title = f"{info['task']} Results"
-    card.performance.analysis = f"Evaluation was conducted at {info['datetime']} for {info['task'].lower()} with {info['batch_size']} batch size. The source file is:<br>{info['code']}"
-    card.performance.metrics = (
-            f"The following metrics were computed at {info['datetime']}:<br>"
-            + "".join([f"- {k}: {v}<br>" for k, v in info['metrics'].items()])
-    )
-    card.performance.thresholds = f"No thresholds have been applied on metric values computed at {info['datetime']}."
-    card.considerations.software = f"The evaluation was conducted with <a href=\"https://pypi.org/project/aicard-eval/\">aicard_eval</a>-{info['package_version']}"
-    card.considerations.hardware = "The following hardware suffices for model running and evaluation:<br>"+info['hardware']+"<br>"    
-    return card
-
 def evaluate(
     data: "path or data",
     pipeline: callable,
@@ -67,8 +54,7 @@ def evaluate(
     batch_size:int=1,
     anns: list[list[dict]]|list[dict]|None=None,
     box_format = None,
-    as_card = False
-) -> dict | ModelCard:
+) -> dict:
     if anns is None:
         anns = [None]
     if is_path(data):
@@ -110,19 +96,17 @@ def evaluate(
     out = {
         'package_version': aicard_eval.__version__,
         'datetime': datetime.now().strftime('%Y-%b-%d %H:%M'),
+        'date': datetime.now().strftime('%Y-%b-%d'),
         'task':task.name ,
         'metrics': metrics,
         'batch_size': batch_size,
         'code': caller_content,
         'hardware': get_hardware_info(emission),
         'execution_time': f'inference: {human_readable_time(pipe_execution_time)}, metrics: {human_readable_time(metrics_execution_time)}',
-        'energy_consumption': f"{emission['power_consumption(kWh)'][0]} kWh, ",
+        'energy_consumption': emissionReadableFormat(emission['power_consumption(kWh)'][0]),
         }
 
     if 'num_classes' in kwargs and kwargs['num_classes']: out['num_classes'] = kwargs['num_classes']
 
-    if as_card:
-        return evaluate_to_card(out)
-    
     return out
     
