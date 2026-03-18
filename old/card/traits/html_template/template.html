@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="template.css">
+</head>
+<body>
+    <div class="content-container">
+        <div class="title">{{ title }}</div>
+        <div class="model-details">{{ model_details }}</div>
+        <div class="tab-container">
+            {% for tab in tabs %}
+            <div class="tab {% if loop.first %}active-tab{% endif %}" onclick="showTabContent('tab{{ loop.index0 }}')">
+                {{ tab.name }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="tab-content-container">
+            {% for tab in tabs %}
+            <div id="tab{{ loop.index0 }}" class="tab-content {% if loop.first %}active-content{% endif %}">
+                {{ tab.content | safe }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="template.js"></script>
+</body>
+</html>

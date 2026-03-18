@@ -1,0 +1,155 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+.title {
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #333;
+}
+.plot-inline-div {
+    display: inline-block;
+    margin-right: 10px;
+}
+/* tabs */
+.tab-container {
+    display: flex;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 20px;
+}
+.tab {
+    flex: 1;
+    padding: 15px;
+    background-color: #f9f9f9;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border-right: 1px solid #ddd;
+    border-radius: 10px 10px 0 0;
+}
+.tab:hover {
+    background-color: #6bb2ff;
+    transform: translateY(-2px);
+}
+.tab:last-child {
+    border-right: none;
+}
+.active-tab {
+    background-color: #007BFF;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.4);
+    transform: translateY(-5px);
+    border-radius: 10px 10px 0 0;
+}
+.tab-content {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.active-content {
+    display: block;
+}
+.content-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+.key_entry {
+    display: inline-block;
+    width: 200px;
+}
+.value_missing {
+    color: #888;
+}
+
+/* AI generated indicator */
+.ai_generated {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+  color: #007BFF
+}
+
+.ai_generated .text {
+  visibility: hidden;
+  color: #000000;
+  padding: 8px;
+  border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ai_generated:hover .text {
+  visibility: visible;
+}
+
+/* Show more info dropdown */
+.show-more-container {
+
+}
+
+.show-more-btn {
+    text-shadow: 2px 2px 2px grey;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.show-more-btn:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.show-more-content {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/*************************** tool tips**************************************/
+.tooltip {
+    position: relative;
+    color: #007BFF;
+}
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+.default {
+    border-bottom: none;
+    cursor: default;
+}
+.default .tooltiptext {
+    display: none; /* Hide tooltiptext in default state */
+}
+/************************************************************************************/
