@@ -58,7 +58,8 @@ text_classification = Task(
              metrics.recall_macro, metrics.recall_micro,
              metrics.top1_acc_micro, metrics.top1_acc_macro, metrics.top1_acc_weighted,
              metrics.f1_macro, metrics.f1_micro,
-             metrics.auc_roc_macro, metrics.auc_roc_weighted],
+             metrics.auc_roc_macro, metrics.auc_roc_weighted,
+             metrics.min_prule, metrics.max_dfpr, metrics.max_dfnr],
     parameters=params.classification,
     toinstance=(
         [np.ndarray, int, float, list[float], str, dict[str, float]],

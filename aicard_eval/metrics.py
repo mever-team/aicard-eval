@@ -1,5 +1,7 @@
 from math import sqrt
 import numpy as np
+import fairbench as fb
+from fairbench.v2.core import sensitive
 from sklearn.metrics import (
     f1_score,
     accuracy_score,
@@ -31,6 +33,34 @@ def precision_weighted(preds, target, task, num_classes):return roundx(precision
 def recall_micro(preds, target, task, num_classes):return roundx(recall_score(to_labels(target), to_labels(preds), average="micro", zero_division=0))
 def recall_macro(preds, target, task, num_classes):return roundx(recall_score(to_labels(target), to_labels(preds), average="macro", zero_division=0))
 def recall_weighted(preds, target, task, num_classes):return roundx(recall_score(target, preds, average="weighted", zero_division=0))
+
+def _fairness_measure(schema, preds, target, task, num_classes, sensitive, unpack_categorical_columns=False):
+    preds = to_labels(preds)
+    target = to_labels(target)
+    if not sensitive: raise TypeError("no sensitive attributes")
+    sensitive_dims = fb.Dimensions({k: fb.categories @ v for k,v in sensitive.items()} if unpack_categorical_columns else sensitive)
+    try:
+        values: list[float] = list()
+        for num_class in range(num_classes):
+            value = fb.quick.__getattr__(schema)(
+                predictions=preds==num_class,
+                labels=target==num_class,
+                sensitive=sensitive_dims)
+            #value.show() # for debugging
+            values.append(float(value))
+            return min(values)
+    except fb.core.NotComputable:
+        raise TypeError("no valid fairness computation")
+
+def min_prule(preds, target, task, num_classes, sensitive):
+    return roundx(1-_fairness_measure("pairwise_maxrel_pr", preds, target, task, num_classes, sensitive))
+
+def max_dfpr(preds, target, task, num_classes, sensitive):
+    return roundx(_fairness_measure("pairwise_maxdiff_tnr", preds, target, task, num_classes, sensitive))
+
+def max_dfnr(preds, target, task, num_classes, sensitive):
+    return roundx(_fairness_measure("pairwise_maxdiff_tpr", preds, target, task, num_classes, sensitive))
+
 
 def precision_recall_curve(preds, target, task='binary', num_classes=2):
     precision, recall, thresholds = pr_curve(y_true=target, y_score=preds)

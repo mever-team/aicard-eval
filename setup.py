@@ -19,6 +19,7 @@ setup(
                     "eco2ai",
                     "html2text",
                     "markdown2",
+                    "fairbench",
                       ],
     description="Evaluation module for aicard.",
     author="CERTH",

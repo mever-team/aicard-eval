@@ -2,8 +2,9 @@ from datetime import datetime
 import time
 import inspect
 import pickle
-from .emissions import Emission
+import platform
 from .utils import emissionReadableFormat
+from typing import Callable
 
 import aicard_eval
 from .utils import (human_readable_time,
@@ -46,9 +47,10 @@ def pipeline_loop(data, pipeline, cache_path):
 
 def evaluate(
     data: "path or data",
-    pipeline: callable,
+    pipeline: Callable,
     task: aicard_eval.tasks.Task,
     cache_path: str = None,
+    sensitive_columns:list[str]|Callable|None=None,
     target_column:str|None=None,
     num_classes:int|None=None,  # in case the preds have more classes than target
     batch_size:int=1,
@@ -67,24 +69,46 @@ def evaluate(
     target_column = check_validity_of_target(anns[0] if len(anns.features) else data[0], task, target_column)
     out_sample = pipeline(data[0])
     task.assert_output_type(out_sample[0])
-    
-    emissions = Emission()
-    emissions.start()
+
+    try:
+        # there are a ton of issues with eco2ai and these checks
+        # are inserted to avoid invalidating the whole application
+        # during new feature development
+        from .emissions import Emission
+        emission = Emission()
+        emission.start()
+    except:
+        emission = None
     preds, pipe_execution_time = pipeline_loop(data, pipeline, cache_path)
-    emissions.stop()
-    emission = emissions.pop()
-    
+    if emission is not None:
+        try:
+            emission.stop()
+            emission = emission.pop()
+        except:
+            emission = None
+    if emission is None:
+        try:
+            with open("/proc/cpuinfo") as f:
+                for line in f:
+                    if "model name" in line:
+                        cpu_info = line.strip().split(":")[1].strip()
+        except FileNotFoundError:
+            cpu_info = platform.processor() or platform.machine()
+        emission = {'CPU_name': cpu_info, 'GPU_name': 'NA'}
+    if isinstance(sensitive_columns, list):
+        sensitive_columns = lambda batch: {column: batch[column] for column in sensitive_columns}
     kwargs = task.parameters(
         data=data,
         preds=preds,
         target_column=target_column,
         num_classes=num_classes,
         anns=anns,
+        sensitive_columns=sensitive_columns
     )
     if box_format:
         kwargs['box_format'] = box_format
-
-    if 'num_classes' in kwargs and kwargs['num_classes'] == 2: task.metrics.append(aicard_eval.metrics.precision_recall_curve)
+    if 'num_classes' in kwargs and kwargs['num_classes'] == 2:
+        task.metrics.append(aicard_eval.metrics.precision_recall_curve)
     start = time.time()
     metrics = {metric.__name__: autocall(metric, **kwargs) for metric in task.metrics}
     metrics_execution_time = time.time() - start
@@ -103,8 +127,9 @@ def evaluate(
         'code': caller_content,
         'hardware': get_hardware_info(emission),
         'execution_time': f'inference: {human_readable_time(pipe_execution_time)}, metrics: {human_readable_time(metrics_execution_time)}',
-        'energy_consumption': emissionReadableFormat(emission['power_consumption(kWh)'][0]),
-        }
+        'energy_consumption': emissionReadableFormat(emission['power_consumption(kWh)'][0]) if 'power_consumption(kWh)' in emission else "NA",
+    }
+
 
     if 'num_classes' in kwargs and kwargs['num_classes']: out['num_classes'] = kwargs['num_classes']
 

@@ -3,6 +3,7 @@ from huggingface_hub import dataset_info
 from transformers import pipeline
 import aicard_eval
 import pprint
+import re
 
 class TextClassifier:
     def __init__(self):
@@ -19,11 +20,31 @@ class TextClassifier:
             out.append([flat[name] for name in self.class_names.values()])
         return out
 
+def detect_sensitive_attributes(batch):
+    # this is a toy method for demonstration purposes
+    # overlapping gender attributes based on word detection (set values for O(1) lookup if those lists grow)
+    categories = {
+        "male": {"he", "his", "him", "himself"},
+        "female": {"she", "hers", "her", "herself"},
+    }
+    texts = batch['text']
+    results = {cat: [0]*len(texts) for cat in categories} # preallocate for speed
+    for entry, text in enumerate(texts):
+        for cat, associated_words in categories.items():
+            for token in re.sub(r'[^a-z]', ' ', text.lower()).split():
+                if len(token)<=1: continue # speedup
+                if token in associated_words:
+                    results[cat][entry] = 1
+    return results
+
+
 metrics = aicard_eval.evaluate(
     data=load_dataset("google-research-datasets/go_emotions", split='test'),
     pipeline=TextClassifier(),
     task=aicard_eval.tasks.nlp.text_classification,
-    batch_size=32)
+    batch_size=32,
+    sensitive_columns=detect_sensitive_attributes
+)
 
 pprint.pprint(metrics)
 # {'batch_size': 32,

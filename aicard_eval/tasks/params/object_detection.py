@@ -8,7 +8,7 @@ import validators
 
 from ... import utils
 
-def main(data, preds, target_column, num_classes, anns):
+def main(data, preds, target_column, num_classes, anns, sensitive_columns):
     anns_source = data if len(anns.features) == 0 else anns
     if len(target_column) == 2:
         bbox_column, label_column = target_column
