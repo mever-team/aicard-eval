@@ -39,11 +39,43 @@ def upload(username: str,
         
     print('Model card updated successfully: ' + base_url+url_prefix+'/model_card.html?id='+str(card_id))
 
-def emissionReadableFormat(value):
-    if value < 0.001:  # less than 1 Wh
-        return f"{value * 1000:.3f} Wh"
-    else:
-        return f"{value:.3f} kWh"
+def emissionReadableFormat(kwh):
+    wh = kwh * 1000.0
+    units = [
+        ("TWh", 1e12),
+        ("GWh", 1e9),
+        ("MWh", 1e6),
+        ("kWh", 1e3),
+        ("Wh",  1.0),
+        ("mWh", 1e-3),
+        ("μWh", 1e-6)
+    ]
+    for unit_name, scale in units:
+        if wh >= scale:
+            numeric_value = wh / scale
+            return f"{numeric_value:.3f} {unit_name}"
+    # Fallback for values smaller than 1 μWh
+    return f"{wh / 1e-6:.3f} μWh"
+
+def massReadableFormat(kgr):
+    gr = kgr * 1000.0
+    units = [
+        ("Gt", 1e15),   # 1 gigatonne = 1e15 g
+        ("Mt", 1e12),   # 1 megatonne = 1e12 g
+        ("kt", 1e9),    # 1 kilotonne = 1e9 g
+        ("t",  1e6),    # 1 tonne = 1e6 g
+        ("kg", 1e3),    # 1 kilogram = 1000 g
+        ("g",  1.0),
+        ("mg", 1e-3),
+        ("µg", 1e-6)
+    ]
+
+    for unit_name, scale in units:
+        if gr >= scale:
+            numeric_value = gr / scale
+            return f"{numeric_value:.3f} {unit_name}"
+    # Fallback for values smaller than 1 µg
+    return f"{gr / 1e-6:.3f} µg"
     
 def human_readable_time(seconds: float) -> str:
     if seconds < 1e-3:  # less than 1 millisecond

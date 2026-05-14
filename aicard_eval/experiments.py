@@ -3,7 +3,7 @@ import time
 import inspect
 import pickle
 import platform
-from .utils import emissionReadableFormat
+from .utils import emissionReadableFormat, massReadableFormat
 from typing import Callable
 
 import aicard_eval
@@ -70,31 +70,14 @@ def evaluate(
     out_sample = pipeline(data[0])
     task.assert_output_type(out_sample[0])
 
-    try:
-        # there are a ton of issues with eco2ai and these checks
-        # are inserted to avoid invalidating the whole application
-        # during new feature development
-        from .emissions import Emission
-        emission = Emission()
-        emission.start()
-    except:
-        emission = None
+
+    from .emissions import CarbonTrack
+    emission = CarbonTrack()
+    emission.start('eval')
     preds, pipe_execution_time = pipeline_loop(data, pipeline, cache_path)
-    if emission is not None:
-        try:
-            emission.stop()
-            emission = emission.pop()
-        except:
-            emission = None
-    if emission is None:
-        try:
-            with open("/proc/cpuinfo") as f:
-                for line in f:
-                    if "model name" in line:
-                        cpu_info = line.strip().split(":")[1].strip()
-        except FileNotFoundError:
-            cpu_info = platform.processor() or platform.machine()
-        emission = {'CPU_name': cpu_info, 'GPU_name': 'NA'}
+    emission = emission.stop('eval')
+    emissions_out = {k: emission[k] for k in ['energy_consumed', 'emissions', 'cpu_model', 'gpu_model', 'ram_total_size']}
+    
     if isinstance(sensitive_columns, list):
         sensitive_columns = lambda batch: {column: batch[column] for column in sensitive_columns}
     kwargs = task.parameters(
@@ -125,9 +108,12 @@ def evaluate(
         'metrics': metrics,
         'batch_size': batch_size,
         'code': caller_content,
-        'hardware': get_hardware_info(emission),
         'execution_time': f'inference: {human_readable_time(pipe_execution_time)}, metrics: {human_readable_time(metrics_execution_time)}',
-        'energy_consumption': emissionReadableFormat(emission['power_consumption(kWh)'][0]) if 'power_consumption(kWh)' in emission else "NA",
+        'energy_consumption': emissionReadableFormat(emissions_out['energy_consumed']),
+        'emissions': massReadableFormat(emissions_out['emissions']),
+        'cpu_model': emissions_out['cpu_model'],
+        'gpu_model': emissions_out['gpu_model'],
+        'ram_total_size': emissions_out['ram_total_size'],
     }
 
 
