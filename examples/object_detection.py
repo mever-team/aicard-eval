@@ -1,5 +1,6 @@
 # pip install transformers
 # pip install timm
+# install pytorch based on you CUDA version
 from PIL import Image
 import numpy as np
 import io

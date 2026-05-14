@@ -1,5 +1,6 @@
 # pip install transformers 
 # pip install decord 
+# install pytorch based on you CUDA version
 import aicard_eval
 
 import torch

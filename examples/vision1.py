@@ -1,4 +1,5 @@
 # pip install transformers 
+# install pytorch based on you CUDA version
 import aicard_eval
 from transformers import AutoImageProcessor, SiglipForImageClassification
 import torch

@@ -1,9 +1,9 @@
 # AICard-Eval
 
-This is a package created under the AI-CODE and it's part of the transparency services for AI model cards. Its purpose is to provide a single tool for evaluating AI models. The output is standardized and meant (but not restricted) to be used as an import for aicard package.
+This is a package created under the AI-CODE and it's part of the transparency services for AI model cards. Its purpose is to provide a single tool for evaluating AI models with performance and bias metrics. The output is standardized and meant (but not restricted) to be used as an import for aicard package.
 
 *Notice:*
-*This is an alpha version. Some functions might not work as intended. Suported cases are text, image, and video classifications (binary, multiclass, and multilabel),  and object detection.*
+*This is an alpha version. Some functions might not work as intended. Suported cases are text, image, and video classifications (binary, multiclass, and multilabel),  and object detection. The output also reports 3 bias metrics using the [FairBench](https://github.com/mever-team/FairBench) package*
 
 ## ⚡ Quickstart
 
@@ -53,26 +53,32 @@ metrics = aicard_eval.evaluate(
     batch_size=32)
 
 print(metrics)
-# {'package version': '0.1.0', 
-# 'datetime': '2025-Nov-14 14:54', 
-# 'task': 'Text Classification', 
-# 'energy consumption': 0.6384167860318 Wh
-# 'metrics': {
-#     'precision_macro': 0.509, 
-#     'precision_micro': 0.574, 
-#     'recall_macro': 0.464, 
-#     'recall_micro': 0.574, 
-#     'top1_acc_micro': 0.574, 
-#     'top1_acc_macro': 0.574, 
-#     'top1_acc_weighted': 0.574, 
-#     'f1_macro': 0.466, 
-#     'f1_micro': 0.574, 
-#     'auc_roc_macro': 0.928, 
-#     'auc_roc_weighted': 0.91}, 
-# 'batch_size': 32, 
-# 'hardware': 'CPU: AMD Ryzen 7 7800X3D 8-Core Processor, RAM: 15.62 GB, CUDA: | NVIDIA-SMI 580.102.01 Driver Version: 581.57  CUDA Version: 13.0|', 
-# 'execution_time': 'inference: 34.68s, metrics: 45.76ms', 
-# 'num_classes': 28}
+# {'batch_size': 32,
+#  'cpu_model': 'AMD Ryzen 7 7800X3D 8-Core Processor',
+#  'date': '2026-May-14',
+#  'datetime': '2026-May-14 18:19',
+#  'emissions': '208.987 mg',
+#  'energy_consumption': '620.925 mWh',
+#  'execution_time': 'inference: 30.62s, metrics: 66.70ms',
+#  'gpu_model': '1 x NVIDIA GeForce RTX 4070 SUPER',
+#  'metrics': {'auc_roc_macro': 0.929,
+#              'auc_roc_weighted': 0.91,
+#              'f1_macro': 0.466,
+#              'f1_micro': 0.574,
+#              'max_dfnr': 0.201,
+#              'max_dfpr': 0.034,
+#              'min_prule': 0.655,
+#              'precision_macro': 0.509,
+#              'precision_micro': 0.574,
+#              'recall_macro': 0.465,
+#              'recall_micro': 0.574,
+#              'top1_acc_macro': 0.574,
+#              'top1_acc_micro': 0.574,
+#              'top1_acc_weighted': 0.574},
+#  'num_classes': 28,
+#  'package_version': '0.1.4',
+#  'ram_total_size': 15.621414184570312,
+#  'task': 'Text Classification'}
 ```
 
 You can also upload your metrics to our model card database. This will create an html formated report of your inference run and store it in your own model card.
