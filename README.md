@@ -2,9 +2,6 @@
 
 This is a package created under the AI-CODE and it's part of the transparency services for AI model cards. Its purpose is to provide a single tool for evaluating AI models with performance and bias metrics. The output is standardized and meant (but not restricted) to be used as an import for aicard package.
 
-*Notice:*
-*This is an alpha version. Some functions might not work as intended. Suported cases are text, image, and video classifications (binary, multiclass, and multilabel),  and object detection. The output also reports 3 bias metrics using the [FairBench](https://github.com/mever-team/FairBench) package*
-
 ## ⚡ Quickstart
 
 To install use:
