@@ -1,3 +1,5 @@
+# pip install transformers==4.41.0
+# install pytorch based on you CUDA version
 import aicard_eval
 from transformers import pipeline, AutoTokenizer
 from datasets import load_dataset
@@ -28,4 +30,4 @@ metrics = aicard_eval.evaluate(
     task=aicard_eval.tasks.nlp.text_classification,
     batch_size=4)
 
-print(metrics.to_markdown())
+print(metrics)

@@ -1,3 +1,5 @@
+# pip install transformers
+# pip install timm
 from PIL import Image
 import numpy as np
 import io

@@ -1,3 +1,4 @@
+# pip install transformers 
 import aicard_eval
 from transformers import AutoImageProcessor, SiglipForImageClassification
 import torch

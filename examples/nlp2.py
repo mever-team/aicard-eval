@@ -1,3 +1,5 @@
+# pip install transformers
+# install pytorch based on you CUDA version
 from datasets import load_dataset
 from huggingface_hub import dataset_info
 from transformers import pipeline
@@ -48,22 +50,28 @@ metrics = aicard_eval.evaluate(
 
 pprint.pprint(metrics)
 # {'batch_size': 32,
-#  'datetime': '2025-Nov-21 12:13',
-#  'execution_time': 'inference: 33.11s, metrics: 59.13ms',
-#  'hardware': 'CPU: AMD Ryzen 7 7800X3D 8-Core Processor, RAM: 15.62 GB, CUDA: '
-#              '| NVIDIA-SMI 580.102.01             Driver Version: '
-#              '581.57         CUDA Version: 13.0     |',
-#  'metrics': {'auc_roc_macro': 0.9286682043487104,
-#              'auc_roc_weighted': 0.9099991445506153,
-#              'f1_macro': 0.4661938061623436,
-#              'f1_micro': 0.5741662060070021,
-#              'precision_macro': 0.5090416420534856,
-#              'precision_micro': 0.5741662060070021,
-#              'recall_macro': 0.46497245851260965,
-#              'recall_micro': 0.5741662060070021,
-#              'top1_acc_macro': 0.5741662060070021,
-#              'top1_acc_micro': 0.5741662060070021,
-#              'top1_acc_weighted': 0.5741662060070021},
+#  'cpu_model': 'AMD Ryzen 7 7800X3D 8-Core Processor',
+#  'date': '2026-May-14',
+#  'datetime': '2026-May-14 18:19',
+#  'emissions': '208.987 mg',
+#  'energy_consumption': '620.925 mWh',
+#  'execution_time': 'inference: 30.62s, metrics: 66.70ms',
+#  'gpu_model': '1 x NVIDIA GeForce RTX 4070 SUPER',
+#  'metrics': {'auc_roc_macro': 0.929,
+#              'auc_roc_weighted': 0.91,
+#              'f1_macro': 0.466,
+#              'f1_micro': 0.574,
+#              'max_dfnr': 0.201,
+#              'max_dfpr': 0.034,
+#              'min_prule': 0.655,
+#              'precision_macro': 0.509,
+#              'precision_micro': 0.574,
+#              'recall_macro': 0.465,
+#              'recall_micro': 0.574,
+#              'top1_acc_macro': 0.574,
+#              'top1_acc_micro': 0.574,
+#              'top1_acc_weighted': 0.574},
 #  'num_classes': 28,
-#  'package version': '0.1.0',
+#  'package_version': '0.1.4',
+#  'ram_total_size': 15.621414184570312,
 #  'task': 'Text Classification'}

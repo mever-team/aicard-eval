@@ -1,3 +1,5 @@
+# pip install transformers 
+# pip install decord 
 import aicard_eval
 
 import torch
