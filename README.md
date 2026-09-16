@@ -140,5 +140,8 @@ emissions_out = {k: emissions[k] for k in ['energy_consumed', 'emissions', 'cpu_
 print(emissions_out)
 ```
 If you are using this on a server, make sure you have only one instance of `CarbonTrack()` defined. You can initialize multiple runs with the same instance and truck multiple runs at the same time.  
-> [!NOTE]
-> place holder
+> [!WARNING]
+> This method measure CPU and RAM energy consumption at the process
+level, but GPU energy consumption can only be measured at the device
+level. This means that if other processes / services / programs are
+using the GPU while measuring the energy consumption, the result will not be accurate.
