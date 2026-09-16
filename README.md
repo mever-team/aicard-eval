@@ -6,13 +6,13 @@ This is a package created under the AI-CODE and it's part of the transparency se
 
 To install use:
 
-```
+```bash
 conda create -n aicard-eval python=3.11
 conta activate aicard-eval
 pip install aicard-eval
 ```
 or if you clone this repo
-```
+```bash
 pip install -e .
 ```
 Follow the script bellow. The aicard-eval will choose the correct metrics corresponding to your case. For more examples see the examples/ folder. 
@@ -80,7 +80,7 @@ print(metrics)
 
 You can also upload your metrics to our model card database. This will create an html formated report of your inference run and store it in your own model card.
 
-```
+```python
 from aicard_eval.utils import upload
 upload(username = USER_NAME, password = PASSWORD, metrics = metrics, card_id = 116)
 ```
@@ -117,3 +117,28 @@ with `batch_size=3` then
 >>> data['age'][0]
 30
 ```
+## 🔌 Energy Consumption
+If you want to use the package as an energy consumption tracker, use the bellow instructions:
+On your python environment install the package 
+```bash
+pip install aicard-eval
+```
+and measure the energy consumption like the example bellow
+```python
+from aicard_eval.emissions import CarbonTrack
+
+# initialize the tracker
+emission_tracker = CarbonTrack()
+# initialize run
+run_name = 'my_run'
+emission_tracker.start(run_name)
+# execute some code
+some_code()
+# stop the tracker and obtain the output
+emissions = emission_tracker.stop(run_name)
+emissions_out = {k: emissions[k] for k in ['energy_consumed', 'emissions', 'cpu_model', 'gpu_model', 'ram_total_size']}
+print(emissions_out)
+```
+If you are using this on a server, make sure you have only one instance of `CarbonTrack()` defined. You can initialize multiple runs with the same instance and truck multiple runs at the same time.  
+> [!NOTE]
+> place holder
